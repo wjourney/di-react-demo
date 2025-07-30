@@ -19,7 +19,11 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* 开启 InversifyJS 所需的装饰器支持 */
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
   },
   "include": ["vite.config.ts"]
 }
