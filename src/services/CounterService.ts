@@ -1,4 +1,5 @@
 import { injectable } from 'inversify';
+import { makeAutoObservable } from 'mobx';
 
 export interface ICounterService {
   count: number;
@@ -10,10 +11,16 @@ export interface ICounterService {
 export class CounterService implements ICounterService {
   count = 0;
 
-  inc() {
+  constructor() {
+    /* 关键：让当前实例变成 observable / action */
+    makeAutoObservable(this);
+  }
+
+   inc = () => {        // ← 改成箭头函数
     this.count += 1;
-  }
-  dec() {
+  };
+
+  dec = () => {        // ← 改成箭头函数
     this.count -= 1;
-  }
+  };
 }
