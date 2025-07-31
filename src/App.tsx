@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import { useService } from './hooks/useService';
+import { TYPES } from './types';
+import type { IUserService } from './services/UserService';
+import  type { ICounterService } from './services/CounterService';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const userService = useService<IUserService>(TYPES.IUserService);
+  const counterService = useService<ICounterService>(TYPES.ICounterService);
+
+  // 由于 CounterService 内部维护的是普通字段，无法自动触发 React 渲染
+  // 这里用 useState 做一次简单桥接
+  const [, setVersion] = useState(0);
+
+  const forceUpdate = () => setVersion(v => v + 1);
+
+  const inc = () => {
+    counterService.inc();
+    forceUpdate();
+  };
+  const dec = () => {
+    counterService.dec();
+    forceUpdate();
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div style={{ textAlign: 'center', marginTop: 80 }}>
+      <h2>你好，{userService.getUserName()}！</h2>
+      <h3>计数器：{counterService.count}</h3>
+      <button onClick={dec}>-1</button>
+      <button onClick={inc}>+1</button>
+    </div>
+  );
 }
 
-export default App
+export default App;
